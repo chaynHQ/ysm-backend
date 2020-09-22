@@ -1,5 +1,7 @@
 # YSM Backend
 
+![GitHub Actions CI workflow badge](https://github.com/chaynHQ/ysm-backend/workflows/YSM%20Backend%20CI%20pipeline/badge.svg)
+
 A [NestJS](https://nestjs.com/) API server with [Jest](https://jestjs.io/) testing.
 
 ## Development
@@ -15,7 +17,7 @@ Note: if you just want to run the backend service locally and not do any develop
 
 Certain config values are required to run the server.
 
-For local development, create a new **`.env.development`** file at the root of the `ysm-backend` folder, and add in the following:
+For local development, create a new **`.env.development`** file and add in the following:
 
 ```shell
 STORYBLOK_TOKEN={value}  # The API token from Storyblok (must have 'draft' access)
