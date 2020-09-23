@@ -63,8 +63,8 @@
     "typescript": "^4.0.2"
   },
   "engines": {
-    "node": ">= 10.18.1",
-    "yarn": ">= 1.21.1"
+    "node": "12.x",
+    "yarn": "1.x"
   },
   "jest": {
     "moduleFileExtensions": [
