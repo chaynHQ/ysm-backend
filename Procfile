@@ -1,1 +1,1 @@
-web: npm run start:prod
+web: yarn run start:prod --optimize_for_size --max_old_space_size=460 --gc_interval=100
