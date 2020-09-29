@@ -10,7 +10,7 @@ Note: if you just want to run the backend service locally and not do any develop
 
 ### Prerequisites
 
-- NodeJS v10+
+- NodeJS v12+
 - Yarn v1.21+
 
 ### Set up local env config
