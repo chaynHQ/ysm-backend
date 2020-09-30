@@ -1,12 +1,7 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { FIREBASE } from '../firebase/firebase-factory';
 import { firebase, FirebaseServices } from '../firebase/firebase.types';
+import { Logger } from '../logger/logger';
 
 @Injectable()
 export class AuthService {
