@@ -25,6 +25,9 @@ STORYBLOK_TOKEN={value}  # The API token from Storyblok (must have 'draft' acces
 FIREBASE_SERVICE_ACCOUNT={value}  # The service account JSON object serialised into a string and then base64 encoded
 
 CONTENT_EDITOR_EMAILS={value}  # Optional. A comma separated list of email addresses of the users that are allowed to access preview mode (for viewing draft content from Storyblok)
+
+ROLLBAR_TOKEN={value}  # Optional when running in `dev` mode. Either set this to the Rollbar server token, or to `false` to disable.
+ROLLBAR_ENV=local-dev  # Required in `production` mode or if `ROLLBAR_TOKEN` is set.
 ```
 
 #### Env config for tests

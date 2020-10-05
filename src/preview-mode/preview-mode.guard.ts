@@ -1,8 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { PREVIEW_MODE_FIELD, PREVIEW_MODE_HEADER_NAME } from '../constants';
+import { Logger } from '../logger/logger';
 
 @Injectable()
 export class PreviewModeGuard implements CanActivate {
