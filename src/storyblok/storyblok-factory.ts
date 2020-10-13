@@ -13,6 +13,7 @@ export const storyblokFactory = {
     const storyblokToken = configService.get<string>('storyblok.token');
     return new StoryblokClient({
       accessToken: storyblokToken,
+      cache: { type: 'memory', clear: 'auto' },
     });
   },
   inject: [ConfigService],
