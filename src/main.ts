@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import rateLimit from 'express-rate-limit';
 import { AppModule } from './app.module';
 import { Logger } from './logger/logger';
 import { LoggingInterceptor } from './logger/logging.interceptor';
@@ -10,18 +11,30 @@ async function bootstrap() {
     logger: false,
   });
 
-  app.useLogger(app.get(Logger));
+  const logger = app.get(Logger);
+  app.useLogger(logger);
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.setGlobalPrefix('/api');
+
+  app.enableShutdownHooks();
+
+  const configService = app.get(ConfigService);
 
   // see https://expressjs.com/en/guide/behind-proxies.html
   app.set('trust proxy', 1);
 
-  app.enableShutdownHooks();
-
-  app.useGlobalInterceptors(new LoggingInterceptor());
-
-  const configService = app.get(ConfigService);
+  if (process.env.NODE_ENV !== 'test') {
+    app.use(
+      rateLimit({
+        windowMs: configService.get('rateLimit.windowMs'),
+        max: configService.get('rateLimit.max'),
+        onLimitReached: (req) => {
+          logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
+        },
+      }),
+    );
+  }
 
   await app.listen(configService.get('port'));
 }

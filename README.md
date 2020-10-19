@@ -28,6 +28,9 @@ CONTENT_EDITOR_EMAILS={value}  # Optional. A comma separated list of email addre
 
 ROLLBAR_TOKEN={value}  # Optional when running in `dev` mode. Either set this to the Rollbar server token, or to `false` to disable.
 ROLLBAR_ENV=local-dev  # Required in `production` mode or if `ROLLBAR_TOKEN` is set.
+
+RATE_LIMIT_WINDOW_MS={value} # Optional. The window of time (in milliseconds) for the rate limiting to apply.
+RATE_LIMIT_MAX=(value) # Optional. The max number of requests (per IP address) within the window of time (above).
 ```
 
 #### Env config for tests

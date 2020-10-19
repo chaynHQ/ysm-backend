@@ -11,6 +11,10 @@ export interface Config {
     serviceAccount: Record<string, string>;
   };
   contentEditorEmails: string[];
+  rateLimit: {
+    windowMs: number;
+    max: number;
+  };
 }
 
 export default (): Config => ({
@@ -22,6 +26,7 @@ export default (): Config => ({
     serviceAccount: getFirebaseServiceAccount(),
   },
   contentEditorEmails: getContentEditorEmails(),
+  rateLimit: getRateLimit(),
 });
 
 function getFirebaseServiceAccount() {
@@ -52,4 +57,17 @@ function getContentEditorEmails() {
     .split(',')
     .map((v) => v.toLowerCase().trim())
     .filter((v) => !!v);
+}
+
+function getRateLimit() {
+  const windowMs = process.env.RATE_LIMIT_WINDOW_MS
+    ? parseInt(process.env.RATE_LIMIT_WINDOW_MS)
+    : 1 * 60 * 1000; // Default: 1 minute
+
+  const max = process.env.RATE_LIMIT_MAX ? parseInt(process.env.RATE_LIMIT_MAX) : 60;
+
+  return {
+    windowMs,
+    max,
+  };
 }
