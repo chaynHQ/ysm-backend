@@ -11,7 +11,8 @@ async function bootstrap() {
     logger: false,
   });
 
-  app.useLogger(app.get(Logger));
+  const logger = app.get(Logger);
+  app.useLogger(logger);
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.setGlobalPrefix('/api');
@@ -28,6 +29,9 @@ async function bootstrap() {
       rateLimit({
         windowMs: configService.get('rateLimit.windowMs'),
         max: configService.get('rateLimit.max'),
+        onLimitReached: (req) => {
+          logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
+        },
       }),
     );
   }
