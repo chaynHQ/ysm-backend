@@ -1,5 +1,7 @@
 import { INestApplication } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as jwt from 'jsonwebtoken';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { FIREBASE } from './../src/firebase/firebase-factory';
@@ -24,6 +26,8 @@ describe('User Profile (e2e)', () => {
   let firebaseServices: FirebaseServices;
   let authToken: string;
 
+  let configService: ConfigService;
+
   afterAll(async () => {
     await deleteUser(firebaseServices.auth, authUser.uid);
 
@@ -44,6 +48,8 @@ describe('User Profile (e2e)', () => {
     if (!authToken) {
       authToken = await generateIdToken(firebaseServices.auth, authUser.uid, authUser.email);
     }
+
+    configService = app.get<ConfigService>(ConfigService);
   });
 
   beforeEach(async () => {
@@ -529,6 +535,57 @@ describe('User Profile (e2e)', () => {
             },
           });
       });
+    });
+  });
+
+  describe('with a spoofed token', () => {
+    it('should not allow this token', () => {
+      // A test private key used to sign the spoofed token
+      const privateKey = `-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCXa5NxfjFLcQGB\nm/Z6TkbyvCNtf3F/fpQCsAW6svPrEH66A/mTDLyEpjeLCTS5A2cUIWY7GHpbl/nk\ni6VxtFDPirGhJMOyhTO+5GQCgxPzoGchdNx56wz7qcoF/y1Pcg29UmKj+S1HV6rj\nj71k4jCY8GFDrwoQkYv6pbd4qzK3CJ/cftXIJF8/uI/gLHmXjKM0k8yVKlEzwXfT\nZLtS/3zYZbg3xgEJZRv1waWR7H24nyvDd96OZT8WuwvSy1+B46g9lkefyfLqiWkv\nsSAS6LK//PIDqEI7Z6I7RBDcrau6lt++u77i/7XbW0dQ4RABoDE74ioQ5RubHPrP\nPKJDhS21AgMBAAECggEAcFwUSfhhLeEKRBnuWS1yujZfd6ZFG11bCW+CoNqf40MX\nNoMylCq0TR5mQtau98cNm0N5b8qnKQZqGWyCdRBfktIRI0l7qiHrlvA1QiPwDy1s\nucfUvudrd+ezEKYdAkHY7i6PIawKLFFiboBAAvdRJnvhQO9HYaoPHAwSTAmFlYk9\njeJP753O6mKxo4UfuPjzljpzaP/UkQrqMMUrcY6U5pv/9exDYOqw2bF3ICkRQm9n\ntSrm48oSUL+i/vZ1EnVVi5AQN2NK3Mr2akam+cVqCWbATCKy0CmVgm8+xhxGptXM\nzflmMfsJgsVdPoylzhkxhKJEu4tbzvFmPFvGNJpCgQKBgQDIzyxJrg7FzXHrt192\nnwRGbNarnPU/6fgwX38bHKWy2NWyDWeR0F1qaUQqrFT3DYqXUgd3PZpB2ujrFUPv\nSRqhd6LyZgkbnXlIqyJSShhXAhAkqgMXt1YJNXCtHgXkhMx/ELJRmRraG+RwSz6U\n9cELO2NPTwje9e2znPC979hBVQKBgQDBCWrLeM2hcmTQq/fsbI5MI6049LHh5AHJ\n0LphPoPpBNEUmv0RRzNjFxPJq9k/HDwTbUA51yOYMeM816cN95z4jiyApv3rX2oo\ni1p80eHHRJ08g3FBuecmRm2vfQxZxKrPgGP1ZAoppx5GrhJaJEFQ5R4unFDnbDGw\nKh8HKwy64QKBgHjUyLZxKOx3KeSHi8bp+n2SAj5zjNNvqusYm3gp7b7HYRbpn/eK\npJtiSiVPWzTpjgptzpY+mDKmUd8bBazXlVGxlng7U6GtSQykBVv0v96jHCmjr4a2\nx+t0n59b4HnYOuD+n/4fnZu+it/TNw4VLpremmxfh1v6KZUZi3cO+ladAoGAeDvZ\nXOrdiZWq3Z5/Sa9D4oDGQBeJRF20D3QG4tMBbn4ljGQNBFoI08tn89Ep+3kmoiMG\nQgCSlxVbqGXaE4ULLHXBmlBpD9XaVW6W6fAAZRGDrlFglcOpCdoML6X/r1oj2iLq\nH8oz2kXRQczieWrjk/NhnT6X1c06FbPmp5xUzYECgYBZ3+46o4IwzgwLGMlw01yI\nox7EZPIjT2Mlvu72elmdIB1vX8/iDczrdehUTbSJ6L4dtbC2EZQ0TNOAWNfzMyif\nUmFF3eAUi+p6qzsbTHZvoVBmFFOuwSGfVW5rRLb8kWKQ1+LS1YqJ8cQDOFWia6De\nwV53EofK3xmG6QX3WGQGxg==\n-----END PRIVATE KEY-----`;
+
+      // Latest public key ID from: https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
+      const keyId = 'd10c8f8b0dc7f55e2b3541f29e5ac3743f77ccee';
+
+      const serviceAccount = configService.get('firebase.serviceAccount');
+      const projectId = serviceAccount.project_id;
+
+      const authTime = Date.now() - 5 * 60 * 1000; // 5 mins ago
+
+      const spoofedToken = jwt.sign(
+        {
+          iat: authTime,
+          auth_time: authTime,
+          user_id: authUser.uid,
+          name: authUser.name,
+          email: authUser.email,
+          email_verified: true,
+          firebase: {
+            identities: {
+              email: [authUser.email],
+            },
+            sign_in_provider: 'password',
+          },
+        },
+        privateKey,
+        {
+          algorithm: 'RS256',
+          keyid: keyId,
+          issuer: `https://securetoken.google.com/${projectId}`,
+          audience: projectId,
+          subject: authUser.uid,
+          expiresIn: '10m',
+        },
+      );
+
+      return request(app.getHttpServer())
+        .get('/profile')
+        .set('Authorization', `Bearer ${spoofedToken}`)
+        .expect('Content-Type', /json/)
+        .expect(401, {
+          statusCode: 401,
+          message: 'Unauthorized: token is expired or invalid',
+          error: 'Unauthorized',
+        });
     });
   });
 });
