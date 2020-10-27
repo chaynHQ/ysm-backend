@@ -1,5 +1,7 @@
-import { Controller, Get, HttpCode, Inject } from '@nestjs/common';
+import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
 import StoryblokClient from 'storyblok-js-client';
+import { PreviewMode } from './preview-mode/preview-mode.decorator';
+import { PreviewModeGuard } from './preview-mode/preview-mode.guard';
 import { STORYBLOK_CLIENT } from './storyblok/storyblok-factory';
 
 @Controller()
@@ -7,9 +9,14 @@ export class AppController {
   constructor(@Inject(STORYBLOK_CLIENT) private storyblok: StoryblokClient) {}
 
   @Get('/')
-  @HttpCode(204)
-  root(): void {
+  @UseGuards(PreviewModeGuard)
+  root(@PreviewMode() previewMode: boolean): any {
     // Root level API endpoint that we can use for things like uptime checks
+    if (previewMode) {
+      return { previewMode };
+    } else {
+      return {};
+    }
   }
 
   @Get('flush_cache')
