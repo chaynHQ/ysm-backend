@@ -104,7 +104,7 @@ describe('Themes (e2e)', () => {
           expect(configService.get<string[]>('contentEditorEmails')).toEqual([]);
 
           await request(app.getHttpServer())
-            .get('/resources')
+            .get('/themes')
             .set('X-PREVIEW-MODE', 'true')
             .expect('Content-Type', /json/)
             .expect(403);
