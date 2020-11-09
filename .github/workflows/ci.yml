@@ -10,7 +10,7 @@ jobs:
   test-and-build:
     name: 'Test and build'
 
-    runs-on: ubuntu-18.04 # Contains node v12.x and Yarn v1.22.x
+    runs-on: ubuntu-18.04
 
     defaults:
       run:
@@ -20,10 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '12'
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
