@@ -2,9 +2,9 @@ name: YSM Backend CI pipeline
 
 on:
   push:
-    branches: [master,live]
+    branches: [master]
   pull_request:
-    branches: [master,live]
+    branches: [master]
 
 jobs:
   test-and-build:
