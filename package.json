@@ -33,7 +33,7 @@
     "firebase-admin": "^9.2.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "nanoid": "^3.1.12",
+    "nanoid": "^3.1.31",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rollbar": "^2.19.4",
