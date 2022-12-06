@@ -4,6 +4,8 @@
 
 A [NestJS](https://nestjs.com/) API server with [Jest](https://jestjs.io/) testing.
 
+If you'd like to help Chayn by tackling any of our open Github issues, please get in touch with us to express your interest in volunteering via [this form](https://forms.gle/qXfDdPgJxYwvMmVP7). We'll get back to you to schedule an onboarding call. 
+
 ## Development
 
 Note: if you just want to run the backend service locally and not do any development work on it, you can instead skip to the section on how to run it in a Docker container.
