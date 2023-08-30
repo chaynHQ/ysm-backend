@@ -2,9 +2,17 @@
 
 ![GitHub Actions CI workflow badge](https://github.com/chaynHQ/ysm-backend/workflows/YSM%20Backend%20CI%20pipeline/badge.svg)
 
-A [NestJS](https://nestjs.com/) API server with [Jest](https://jestjs.io/) testing.
+Your Story Matters (YSM) is a digital companion for survivors of sexual assault launched in 2019. Formerly called YANA (You Are Not Alone) and funded by Nesta and the UK Department of Digital, Culture, Media and Sport through the Tech to Connect Challenge, YSM has curated content including recovery, moving through trauma, accessing justice through the law, stories of resilience, and allows survivors the option to create an account and save their journey.
 
-If you'd like to help Chayn by tackling any of our open Github issues, please get in touch with us to express your interest in volunteering via [this form](https://forms.gle/qXfDdPgJxYwvMmVP7). We'll get back to you to schedule an onboarding call. 
+**Currently in active development.**
+
+## Support Us
+
+YSM is created by Chayn a global volunteer network with over 400 volunteers from 15 countries. If you like what you see and you want to join our team of volunteers get in touch. Or you can [donate](https://www.paypal.me/chaynhq); all proceeds go to improving YSM and building more tools and resources at ChaynHQ.
+
+# YSM Backend
+
+A [NestJS](https://nestjs.com/) API server with [Jest](https://jestjs.io/) testing.
 
 ## Development
 
